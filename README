@@ -2,9 +2,7 @@ A little excercise in Arduino POV-fu
 by Christiane Ruetten, cr ät 23bit dot net
 
 This code is mostly undocumented, but it should
-be ready to use in the Arduino environment as soon
-as you move everything but the .pde file out of the
-way.
+be ready to use in the Arduino environment.
 
 Hook up your ADXL's analog X and Y pins to Arduino
 pins A0 and A1, and use 10 LEDs with load resistors
