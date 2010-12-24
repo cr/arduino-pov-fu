@@ -1,14 +1,14 @@
 /********************************************************
- * A little POV test
+ * A little Arduino POV-fu
+ * by Christiane Ruetten, cr@23bit.net
  */
 
+#include <avr/pgmspace.h>
 
 /**********************************************************************
  * Animation handling
  */
  
-#include <avr/pgmspace.h>
-
 #define ANIM_XSIZE 32
 #define ANIM_YSIZE 10
 #define ANIM_FRAMES 99
@@ -145,7 +145,7 @@ long animFrameDuration = 250000;
 #define ANIM_BACKWARD 1
 char animSwingDirection = ANIM_FORWARD;
 
-const int ledPins = 2;              // PWM pin for LED
+const int ledPins = 2;
 
 int anim_data_read() {
   return pgm_read_word( pgmAnimData
@@ -174,6 +174,10 @@ void clear_bar() {
   animPrevBarUpdate = micros();
 }
 
+int bar_update_required() {
+  return( (micros()-animPrevBarUpdate) >= animRowDuration );
+}
+
 void advance_frame() {
   animSequenceCounter = (animSequenceCounter+1) % animLength;
   animFrame = animSequence[animSequenceCounter];
@@ -190,10 +194,6 @@ void advance_row() {
 
 void anim_reset() {
   animSequenceCounter = 0; 
-}
-
-int bar_update_required() {
-  return( (micros()-animPrevBarUpdate) >= animRowDuration );
 }
 
 /**********************************************************************
@@ -296,6 +296,10 @@ int negative_zero_passed() {
   return( (sensorPrevX < 0) && (sensorX >= 0) );
 }
 
+int idle_timeout() {
+  return( micros() - swingStateTime[swingState] >= SWING_IDLE_TIMEOUT );
+}
+
 int left_frame_sync() {
    animFrameDuration = abs(swingStateTime[SWING_POSITIVE_MAX] - swingStateTime[SWING_NEGATIVE_MAX]);
    animRowDuration = 0.99 * animFrameDuration / animXSize;
@@ -313,11 +317,6 @@ int right_frame_sync() {
    // force update on next state cycle
    animPrevBarUpdate = 0;
 }
-
-int idle_timeout() {
-  return( micros() - swingStateTime[swingState] >= SWING_IDLE_TIMEOUT );
-}
-
 
 /**********************************************************************
  * Setup function
