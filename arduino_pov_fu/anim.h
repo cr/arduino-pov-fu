@@ -7,6 +7,7 @@
 
 #include <avr/pgmspace.h>
 #include "anim_data.h"
+#include "display.h"
 #include "state_machine_functions.h"
 
 const int animXSize = ANIM_XSIZE;
@@ -26,38 +27,6 @@ long animFrameDuration = 250000;
 #define ANIM_BACKWARD 1
 char animSwingDirection = ANIM_FORWARD;
 
-const int ledPins = 2;
-
-int anim_data_read() {
-  return pgm_read_word( pgmAnimData
-    + animFrame*animXSize + animXPos ); 
-}
-
-void update_bar() {
-  int value = anim_data_read();
-  int pin;
-  int bitmask;
-  for( pin=ledPins, bitmask=1 ; pin<ledPins+10 ; pin++, bitmask*=2 ) {
-    if( value&bitmask ) {
-      digitalWrite( pin, HIGH );
-    } else {
-      digitalWrite( pin, LOW );
-    }
-  }
-  animPrevBarUpdate = micros();
-}
-
-void clear_bar() {
-  int pin;
-  for( pin=ledPins ; pin<ledPins+10 ; pin++ ) {
-    digitalWrite( pin, LOW );
-  }
-  animPrevBarUpdate = micros();
-}
-
-int bar_update_required() {
-  return( (micros()-animPrevBarUpdate) >= animRowDuration );
-}
 
 void advance_frame() {
   animSequenceCounter = (animSequenceCounter+1) % animLength;
@@ -76,6 +45,37 @@ void advance_row() {
 void anim_reset() {
   animSequenceCounter = 0; 
 }
+
+int anim_read_current_row() {
+  return pgm_read_word( pgmAnimData
+    + animFrame*animXSize + animXPos ); 
+}
+
+void anim_update_display() {
+  display_set( anim_read_current_row() );
+  animPrevBarUpdate = micros();
+}
+
+void anim_clear_display() {
+  display_clear();
+  animPrevBarUpdate = micros();
+}
+
+int anim_display_update_required() {
+  return( (micros()-animPrevBarUpdate) >= animRowDuration );
+}
+
+void anim_handle_display() {
+  if( !state_is( SWING_IDLE ) ) {
+    if( anim_display_update_required() ) {
+      anim_update_display();
+      advance_row();
+    }
+  } else {
+    display_clear();
+  }
+}
+
 
 int left_frame_sync() {
    animFrameDuration = abs(swingStateTime[SWING_POSITIVE_MAX] - swingStateTime[SWING_NEGATIVE_MAX]);

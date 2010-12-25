@@ -24,8 +24,12 @@ int swingState;
 long swingStateTime[8];
 
 void set_state( int state ) {
-   swingState = state;
-   swingStateTime[state] = micros();
+  swingState = state;
+  swingStateTime[state] = micros();
+}
+
+int state_is( int state ) {
+  return swingState == state;
 }
 
 int positive_threshold_passed() {

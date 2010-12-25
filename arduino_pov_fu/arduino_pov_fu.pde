@@ -4,6 +4,7 @@
  */
 
 #include "sensor.h"
+#include "display.h"
 #include "state_machine.h"
 #include "anim.h"
 
@@ -16,13 +17,9 @@ void setup() {
 
   pinMode( 12, INPUT );
 
-  int pin;
-  for( pin=ledPins ; pin<ledPins+10 ; pin++ ) {
-    pinMode( pin, OUTPUT );
-    digitalWrite( pin, HIGH );
-    delay( 20 );
-    digitalWrite( pin, LOW );
-  }
+  display_setup();
+
+  display_swipe_up( 20 );
 
   sensor_calibrate();
 
@@ -34,11 +31,7 @@ void setup() {
   Serial.print( sensorZ0 );
   Serial.println(")"); 
 
-  for( pin=ledPins+9 ; pin>=ledPins ; pin-- ) {
-    digitalWrite( pin, HIGH );
-    delay( 20 );
-    digitalWrite( pin, LOW );
-  }
+  display_swipe_down( 20 );
 
   set_state( SWING_IDLE );
 
@@ -66,16 +59,8 @@ void setup() {
 
 void loop() {
 
-  if( swingState != SWING_IDLE ) {
-    if( bar_update_required() ) {
-      update_bar();
-      advance_row();
-    }
-  } else {
-    clear_bar();
-  }
+  anim_handle_display();
 
-  // update sensor reading
   sensor_read();
 
   state_machine();
