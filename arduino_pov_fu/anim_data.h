@@ -1,3 +1,11 @@
+/**********************************************************************
+ * Animation data
+ */
+ 
+#ifndef __ANIM_DATA_H_
+#define __ANIM_DATA_H_
+
+#include <avr/pgmspace.h>
 
 #define ANIM_XSIZE 32
 #define ANIM_YSIZE 10
@@ -131,3 +139,5 @@ PROGMEM prog_uint16_t pgmAnimData[] = {
   0,0,895,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 };
+
+#endif // __ANIM_DATA_H_
