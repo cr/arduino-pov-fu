@@ -7,6 +7,7 @@
 
 #include <avr/pgmspace.h>
 #include "anim_data.h"
+#include "state_machine_functions.h"
 
 const int animXSize = ANIM_XSIZE;
 const int animYSize = ANIM_YSIZE;

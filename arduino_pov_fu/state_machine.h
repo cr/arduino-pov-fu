@@ -1,59 +1,67 @@
 /**********************************************************************
- * State machine
+ * Main state machine handler
+ * Has to be separated here because it's interwoven with anim.h
  */
 
 #ifndef __STATE_MACHINE_H_
 #define __STATE_MACHINE_H_
 
-#include "sensor.h"
+#include "state_machine_functions.h"
+#include "anim.h"
 
-// Swing state machine states
-// cave: used for array indexing
-#define SWING_IDLE 0
-#define SWING_POSITIVE 1
-#define SWING_POSITIVE_MAX 2
-#define SWING_POSITIVE_ZERO 3
-#define SWING_NEGATIVE 4
-#define SWING_NEGATIVE_MAX 5
-#define SWING_NEGATIVE_ZERO 6
+void state_machine() {
 
-#define SWING_THRESHOLD 100
-#define SWING_IDLE_TIMEOUT 300000
+  switch( swingState ) {
 
-int swingState;
-long swingStateTime[8];
+    case SWING_IDLE:
+      if( positive_threshold_passed() ) set_state( SWING_POSITIVE );
+      else if( negative_threshold_passed() ) set_state( SWING_NEGATIVE );
+      anim_reset();
+      delay(10);
+      break;
 
-void set_state( int state ) {
-   swingState = state;
-   swingStateTime[state] = micros();
-}
+    case SWING_POSITIVE:
+      if( positive_max_passed() ) {
+        set_state( SWING_POSITIVE_MAX );
+        right_frame_sync();
+      } 
+      break;
 
-int positive_threshold_passed() {
-  return( (sensorPrevX < SWING_THRESHOLD) && (sensorX >= SWING_THRESHOLD) );
-}
+    case SWING_POSITIVE_MAX:
+      if( positive_zero_passed() ) {
+        set_state( SWING_POSITIVE_ZERO );
+      }
+      break;
 
-int positive_max_passed() {
-  return( sensorPrevX > sensorX );
-}
+    case SWING_POSITIVE_ZERO:
+      if( idle_timeout() ) set_state( SWING_IDLE );
+      else if( negative_threshold_passed() ) {
+        set_state( SWING_NEGATIVE );
+      }
+      break;
 
-int positive_zero_passed() {
-  return( (sensorPrevX > 0) && (sensorX <= 0) );
-}
+    case SWING_NEGATIVE:
+      if( negative_max_passed() ) {
+        set_state( SWING_NEGATIVE_MAX );
+        left_frame_sync();
+      } 
+      break;
 
-int negative_threshold_passed() {
-  return( (sensorPrevX > -SWING_THRESHOLD) && (sensorX <= -SWING_THRESHOLD) );
-}
+    case SWING_NEGATIVE_MAX:
+      if( negative_zero_passed() ) {
+        set_state( SWING_NEGATIVE_ZERO );
+      }
+      break;
 
-int negative_max_passed() {
-  return( sensorPrevX < sensorX );
-}
+    case SWING_NEGATIVE_ZERO:
+      if( idle_timeout() ) set_state( SWING_IDLE );
+      else if( positive_threshold_passed() ) {
+        set_state( SWING_POSITIVE );
+      }
+      break;
 
-int negative_zero_passed() {
-  return( (sensorPrevX < 0) && (sensorX >= 0) );
-}
+  }
 
-int idle_timeout() {
-  return( micros() - swingStateTime[swingState] >= SWING_IDLE_TIMEOUT );
 }
 
 #endif // __STATE_MACHINE_H_
