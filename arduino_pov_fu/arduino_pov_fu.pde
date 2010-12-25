@@ -35,7 +35,7 @@ void setup() {
 
   set_state( SWING_IDLE );
 
- // Sensor sampling test code
+ /* // Sensor sampling test code
   delay(3000);
   int i;
   for( i=0 ; i<10000 ; i++ ) {
@@ -49,7 +49,7 @@ void setup() {
     Serial.println( sensorZ );
   }  
   delay(300000);
-  
+  */
 }
 
 
