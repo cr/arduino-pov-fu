@@ -39,7 +39,7 @@ void sensor_calibrate() {
   for( i=20 ; i>0 ; i-- ) {
     x0 += analogRead( sensorXPin );
     y0 += analogRead( sensorYPin );
-    y0 += analogRead( sensorZPin );
+    z0 += analogRead( sensorZPin );
     delay( 10 );
   }
   x0/=20.0;
