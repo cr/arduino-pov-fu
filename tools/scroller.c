@@ -5,7 +5,7 @@
 #define SCREEN_X 32
 #define SCREEN_Y 10
 #define BORDER_X 2
-#define SCROLL_SPEED 2
+#define SCROLL_SPEED 3
 
 void dumpframe(int x, int y) {
 	int sx, sy;
