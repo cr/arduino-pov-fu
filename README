@@ -11,33 +11,33 @@ on pins D2 to D11.
 I used an ADXL330 breakout which has the sensor
 mounted at an 45° angle. If your sensor is mounted
 in an ordinary fashion, remove the coordinate base
-rotation by replacing
+rotation by replacing in sensor.h
 
 void read_sensor() {
-  float xr, yr;
-  sensorPrevX = sensorX;
-  sensorPrevY = sensorY;
-  xr = analogRead( A0 ) - sensorX0;
-  yr = analogRead( A1 ) - sensorY0;
+[...]
+  xr = analogRead( sensorXPin ) - sensorX0;
+  yr = analogRead( senxorYPin ) - sensorY0;
   sensorX = 0.707107 * (xr - yr);
   sensorY = 0.707107 * (xr + yr);
+[...]
 }
 
 with
 
 void read_sensor() {
-  sensorPrevX = sensorX;
-  sensorPrevY = sensorY;
-  sensorX = analogRead( A0 ) - sensorX0;
-  sensorY = analogRead( A1 ) - sensorY0;
+[...]
+  sensorX = xr;
+  sensorY = yr;
+[...]
 }
 
 Just make sure you get the axis right. The code
-assumes that, looking towards the leds, swinging
+assumes that, looking towards the LEDs, swinging
 the LEDs to the right produces a positive sensor
-signal. If unsure, try swapping A0 and A1. If your
-animation appears mirrored, swap the invocations
-of right_frame_sync() and left_frame_sync().
+signal. If unsure, try swapping A0 and A1 in the
+sensorX/YPin assignment. If your animation appears
+mirrored, swap the invocations of right_frame_sync()
+and left_frame_sync() in anim.h.
 
 Have fun! :)
 
