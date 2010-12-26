@@ -24,7 +24,7 @@ void setup() {
   delay( 50 );
   display_swipe_up( 20 );
   sensor_calibrate();
-  Serial.print( "Calibrated (0,0,-1) at (" );
+  Serial.print( "Calibrated (0,0,0) at (" );
   Serial.print( sensorX0 );
   Serial.print(",");
   Serial.print( sensorY0 );
