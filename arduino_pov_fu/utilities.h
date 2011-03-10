@@ -5,7 +5,7 @@
 #ifndef __UTILITIES_H_
 #define __UTILITIES_H_
 
-#define SEQ_MAX 32
+#define SEQ_MAX 8
 
 typedef struct {
   int size;

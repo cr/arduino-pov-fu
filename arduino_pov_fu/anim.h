@@ -84,8 +84,6 @@ int left_frame_sync() {
    advance_frame();
    // force update on next state cycle
    animPrevBarUpdate = 0;
-   velocityX = 0;
-   locationX = 0;
 }
 
 int right_frame_sync() {

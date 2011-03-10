@@ -20,17 +20,17 @@ void setup() {
   display_setup();
 
   // wait for any button-press movement to settle
-  // expect sensor to be sittingflat on a table
+  // expect sensor to be sitting flat on a table
   delay( 50 );
   display_swipe_up( 20 );
   sensor_calibrate();
-  Serial.print( "Calibrated (0,0,0) at (" );
+  Serial.print( "Calibrated (0,0,-1) at (" );
   Serial.print( sensorX0 );
   Serial.print(",");
   Serial.print( sensorY0 );
   Serial.print(",");
   Serial.print( sensorZ0 );
-  Serial.println(")"); 
+  Serial.println(")");
   display_swipe_down( 20 );
 
   set_state( SWING_IDLE );
